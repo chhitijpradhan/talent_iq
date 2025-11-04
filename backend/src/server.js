@@ -1,14 +1,16 @@
 import express from 'express';
 import path from "path";
+import cors from 'cors';
 import { ENV } from './lib/env.js';
 import { connectDB } from './lib/db.js';
-import { serve } from 'inngest/express';
+import { serve,functions } from 'inngest/express';
+import { inngest } from './lib/inngest.js';
 
 const app = express();
 
 const __dirname = path.resolve();
 app.get("/book", (req,res) => {
-    res.send.status(200).json({
+    res.status(200).json({
         message : "book api is working"
     })
 })
@@ -18,9 +20,9 @@ app.get("/health", (req, res) => {
 })
 // middleware
 app.use(express.json())
-app.use(cors({origin:ENV.CLIENT_URL,credentials : ture}))
+app.use(cors({origin:ENV.CLIENT_URL,credentials : true}))
 
-app.use("api/inngest", serve({client : inngest, functions}));
+app.use("/api/inngest", serve( {client : inngest, functions}));
 
 // maeke ready for deplyoment
 if (ENV.NODE_ENV === "production"){
