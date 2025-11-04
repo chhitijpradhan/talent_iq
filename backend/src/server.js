@@ -2,6 +2,7 @@ import express from 'express';
 import path from "path";
 import { ENV } from './lib/env.js';
 import { connectDB } from './lib/db.js';
+import { serve } from 'inngest/express';
 
 const app = express();
 
@@ -15,6 +16,11 @@ app.get("/book", (req,res) => {
 app.get("/health", (req, res) => {
     res.send("api of halth get ");
 })
+// middleware
+app.use(express.json())
+app.use(cors({origin:ENV.CLIENT_URL,credentials : ture}))
+
+app.use("api/inngest", serve({client : inngest, functions}));
 
 // maeke ready for deplyoment
 if (ENV.NODE_ENV === "production"){
@@ -31,7 +37,7 @@ const startServer = async () =>{
         console.log(`Server is running on port ${ENV.PORT}`);
         })
     } catch (error) {
-        console.log("Error starting the server", error);
+        console.error("💥 Error starting the server", error);
         process.exit(1);
 
     }
