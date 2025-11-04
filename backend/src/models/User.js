@@ -21,6 +21,8 @@ const userSchema =  new mongoose.Schema(
             unique : true,
         },
         
-    } , { timestamps: ture} //createdat , updatedAt
+    } , { timestamps: true} //createdat , updatedAt
 )
 const User = mongoose.model("User", userSchema);
+
+export default User;
