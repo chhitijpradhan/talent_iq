@@ -5,6 +5,7 @@ import { ENV } from './lib/env.js';
 import { connectDB } from './lib/db.js';
 import { serve } from 'inngest/express';
 import { inngest, functions } from './lib/inngest.js';
+import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
 
@@ -21,8 +22,9 @@ app.get("/health", (req, res) => {
 // middleware
 app.use(express.json())
 app.use(cors({origin:ENV.CLIENT_URL,credentials : true}))
+app.use(clerkMiddleware) // this add auth field to request object: req.auth( )
 
-app.use("/api/inngest", serve({ client: inngest, functions, signingKey: ENV.INNGEST_SIGNING_KEY }));
+app.use("/api/inngest", serve({ client: inngest, functions }));
 
 // maeke ready for deplyoment
 if (ENV.NODE_ENV === "production"){
