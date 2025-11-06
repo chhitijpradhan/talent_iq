@@ -9,19 +9,14 @@ import { inngest, functions } from './lib/inngest.js';
 const app = express();
 
 const __dirname = path.resolve();
-app.get("/book", (req,res) => {
-    res.status(200).json({
-        message : "book api is working"
-    })
-})
 
 app.get("/health", (req, res) => {
     res.send("api of halth get ");
 })
 // middleware
 app.use(express.json())
-app.use(cors({origin:ENV.CLIENT_URL,credentials : true}))
-
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use("/api/chat",chatRoutes);
 app.use("/api/inngest", serve({ client: inngest, functions, signingKey: ENV.INNGEST_SIGNING_KEY }));
 
 // maeke ready for deplyoment
