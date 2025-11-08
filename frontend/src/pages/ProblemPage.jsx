@@ -1,9 +1,5 @@
-import React from 'react'
-
 const ProblemPage = () => {
-  return (
-    <div>ProblemPage</div>
-  )
-}
+  return <div>ProblemPage</div>;
+};
 
-export default ProblemPage
+export default ProblemPage;
