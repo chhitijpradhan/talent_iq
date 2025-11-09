@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from "react-router";
 import HomePage from "./pages/HomePage";
-import ProblemPage from "./pages/ProblemPage";
 import { useAuth, useUser } from '@clerk/clerk-react';
 import { Toaster } from "react-hot-toast";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import ProblemsPage from "./pages/ProblemsPage.jsx";
 
 function App() {
   const { isSignedIn, isLoaded } = useUser();
@@ -20,7 +20,7 @@ function App() {
       <Route path="/dashboard" element={isSignedIn ? <DashboardPage /> : <Navigate to={"/"} />} />
       <Route
         path="/problems"
-        element={ <ProblemPage  />}
+        element={ <ProblemsPage  />}
       />
     </Routes>
     <Toaster /></div>

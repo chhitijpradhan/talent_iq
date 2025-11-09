@@ -1,5 +1,9 @@
+import Navbar from "../components/Navbar";
+
 const ProblemPage = () => {
-  return <div>ProblemPage</div>;
+  return <div>
+    <Navbar/>
+  </div>;
 };
 
 export default ProblemPage;
