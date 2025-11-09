@@ -1,8 +1,11 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
+import WelcomeSection from '../components/WelcomeSection'
 
 const DashboardPage = () => {
   return (
-    <div>DashboardPage</div>
+    <><Navbar />
+    <WelcomeSection /></>
   )
 }
 
