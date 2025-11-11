@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { PROBLEMS } from "../data/problems";
 
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import toast from "react-hot-toast";
 function ProblemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -11,7 +13,7 @@ function ProblemPage() {
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState(PROBLEMS[currentProblemId].starterCode.javascript);
   const [output, setOutput] = useState(null);
-  const [isRunning, setRunning] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
 
   const currentProblem = PROBLEMS[currentProblemId];
 
@@ -48,7 +50,7 @@ function ProblemPage() {
     });
   };
 
-  const normalizedOutput = (output) => {
+  const normalizeOutput = (output) => {
     return output
       .trim()
       .split("\n")
@@ -65,9 +67,53 @@ function ProblemPage() {
       .join("\n");
 
   }
+  const checkIfTestsPassed = (actualOutput, expectedOutput) => {
+    const normalizedActual = normalizeOutput(actualOutput);
+    const normalizedExpected = normalizeOutput(expectedOutput);
+
+    return normalizedActual == normalizedExpected;
+  }
   
-  return <div>
+  const handleRunCode = async () => {
+    setIsRunning(true);
+    setOutput(null);
+
+    const result = await executeCode(selectedLanguage, code);
+    setOutput(result);
+    setIsRunning(false)
+
+
+    // check if code executed successfully and matches expected output
+    if (result.success) {
+      const expectedOutput = currentProblem.expectedOutput[selectedLanguage];
+      const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
+
+      if (testsPassed) {
+        triggerConfetti();
+        toast.success("All tests passed! Great job!")
+      } else{
+        toast.error("Test faled. Checked your output!");
+      }
+    } else{
+      toast.error("Code execution failed!");
+    }
+  };
+  return <div className="h-screen bg-base-100 flex flex-col">
+
     <Navbar />
+    <div className ="flex-1">
+      <PanelGroup directional="horizontal">
+        <Panel defaultSize = {40} minSize = {30}>
+          <ProblemDescription 
+            problem={ currentProblem}
+            currentProblemId = {currentProblemId}
+            onProblemChange = {handleProblemChange}
+            allProblems = {Object.values(PROBLEMS)}
+          />
+        </Panel>
+        <PanelResizedHandle className = "h-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
+      </PanelGroup>
+    </div>
   </div>;
 };
 
