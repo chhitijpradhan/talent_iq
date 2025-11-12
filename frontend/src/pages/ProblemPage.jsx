@@ -63,7 +63,7 @@ function ProblemPage() {
           // normalize spaces around commas to single space after comma
           .replace(/\s*,\s*/g, ",")
       )
-      .filter((line) => line.length > 0 )
+      .filter((line) => line.length > 0)
       .join("\n");
 
   }
@@ -73,7 +73,7 @@ function ProblemPage() {
 
     return normalizedActual == normalizedExpected;
   }
-  
+
   const handleRunCode = async () => {
     setIsRunning(true);
     setOutput(null);
@@ -91,28 +91,48 @@ function ProblemPage() {
       if (testsPassed) {
         triggerConfetti();
         toast.success("All tests passed! Great job!")
-      } else{
+      } else {
         toast.error("Test faled. Checked your output!");
       }
-    } else{
+    } else {
       toast.error("Code execution failed!");
     }
   };
   return <div className="h-screen bg-base-100 flex flex-col">
 
     <Navbar />
-    <div className ="flex-1">
+    <div className="flex-1">
       <PanelGroup directional="horizontal">
-        <Panel defaultSize = {40} minSize = {30}>
-          <ProblemDescription 
-            problem={ currentProblem}
-            currentProblemId = {currentProblemId}
-            onProblemChange = {handleProblemChange}
-            allProblems = {Object.values(PROBLEMS)}
+        <Panel defaultSize={40} minSize={30}>
+          <ProblemDescription
+            problem={currentProblem}
+            currentProblemId={currentProblemId}
+            onProblemChange={handleProblemChange}
+            allProblems={Object.values(PROBLEMS)}
           />
         </Panel>
-        <PanelResizedHandle className = "h-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
+        <PanelResizeHandle className="w-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
       </PanelGroup>
+      <Panel defaultSize={60} minSize={30}>
+        <PanelGroup directional="vertical">
+          <CodeEditorPanel
+            selectedLanguage={selectedLanguage}
+            code={code}
+            onLanguageChange={handleLanguageChange}
+            onCodeChange={setCode}
+            onRunCode={handleRunCode}
+            isRunning={isRunning}
+          />
+          <PanelResizeHandle className="h-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
+
+          {/* Bottom panel - Output Panel*/}
+
+          <Panel defaultSize={30} minSize={30}>
+            <OutputPanel output={output} />
+          </Panel>
+        </PanelGroup>
+      </Panel>
+
     </div>
   </div>;
 };
